@@ -1,15 +1,33 @@
 import express from "express";
-import variables from "./config/dotenv.js";
+
 import router from "./routes/CineRoutes.js";
+import variables from "./config/dotenvConfig.js";
+import { database } from "./database/mongoDB.js";
+import { validateVariables } from "./config/validateVariables.js";
 
-const main = () => {
-  const app = express();
-  app.use(express.json());
+const main = async () => {
+  try {
+    validateVariables();
 
-  app.use(router);
+    const app = express();
+    app.use(express.json());
 
-  app.listen(variables.PORT, () => {
-    console.log(`Rodando na porta ${variables.PORT}`);
+    await database.connect();
+
+    app.use(router);
+
+    app.listen(variables.PORT, () => {
+      console.log(`Rodando na porta ${variables.PORT}`);
+    });
+  } catch (error) {
+    console.log(`Error during server startup: ${error}`);
+    process.exit(1);
+  }
+
+  process.on("SIGINT", async () => {
+    console.log("Encerrando conexão...");
+    database.disconnect();
+    process.exit(0);
   });
 };
 
