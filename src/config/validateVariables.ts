@@ -1,4 +1,4 @@
-import variables from "./dotenvConfig.js";
+import { variables } from "./dotenvConfig.js";
 
 export const validateVariables = () => {
   if (!variables.PORT) throw new Error("PORT environment variable not found!");

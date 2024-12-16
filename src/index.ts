@@ -1,8 +1,8 @@
 import express from "express";
 
 import router from "./routes/CineRoutes.js";
-import variables from "./config/dotenvConfig.js";
 import { database } from "./database/mongoDB.js";
+import { variables } from "./config/dotenvConfig.js";
 import { validateVariables } from "./config/validateVariables.js";
 
 const main = async () => {
@@ -17,7 +17,7 @@ const main = async () => {
     app.use(router);
 
     app.listen(variables.PORT, () => {
-      console.log(`Rodando na porta ${variables.PORT}`);
+      console.log(`Running on port ${variables.PORT}`);
     });
   } catch (error) {
     console.log(`Error during server startup: ${error}`);
@@ -25,7 +25,7 @@ const main = async () => {
   }
 
   process.on("SIGINT", async () => {
-    console.log("Encerrando conexão...");
+    console.log("Closing connection...");
     database.disconnect();
     process.exit(0);
   });
