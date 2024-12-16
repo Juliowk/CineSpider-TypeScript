@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Film } from "../../models/film.js";
 import { HttpRequest, HttpResponse, IController } from "../protocols.js";
 import { IMongoPostRepository, IPostParams } from "./protocols.js";
+import responseReturn from "../helpers.js";
 
 const schemaHttpRequest = z.object({
   name: z.string(),
@@ -39,15 +40,9 @@ export class MongoPostController implements IController {
 
       const result = await this.repository.postFilm(httpRequest.body);
 
-      return {
-        statusCode: 201,
-        body: result,
-      };
+      return responseReturn<Film>(201, result);
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: error,
-      };
+      return responseReturn<string>(500, error);
     }
   }
 }
