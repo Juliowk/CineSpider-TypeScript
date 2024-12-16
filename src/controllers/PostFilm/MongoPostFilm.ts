@@ -32,10 +32,7 @@ export class MongoPostController implements IController {
       const validation = validatedHttpRequest(httpRequest.body);
 
       if (!validation.success) {
-        return {
-          statusCode: 400,
-          body: "Invalid data",
-        };
+        return responseReturn<string>(400, "Invalid data");
       }
 
       const result = await this.repository.postFilm(httpRequest.body);
